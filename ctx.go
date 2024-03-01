@@ -1,4 +1,4 @@
-package logger
+package wdlogger
 
 import (
 	"context"
@@ -10,7 +10,7 @@ const ctxFieldsKey ctxKey = iota
 
 func WithFields(ctx context.Context, fields ...Field) context.Context {
 	s, ok := ctx.Value(ctxFieldsKey).(*ctxFields)
-	if !ok || s == nil{
+	if !ok || s == nil {
 		s = newCtxFields(ctx)
 	}
 
@@ -29,7 +29,7 @@ func ExtractFields(ctx context.Context, fields ...Field) []Field {
 	ctxFieldsAll := s.All()
 
 	if len(fields) != 0 {
-		out := make([]Field, 0, len(fields) + len(ctxFieldsAll))
+		out := make([]Field, 0, len(fields)+len(ctxFieldsAll))
 		out = append(out, ctxFieldsAll...)
 		out = append(out, fields...)
 		return out
@@ -37,7 +37,6 @@ func ExtractFields(ctx context.Context, fields ...Field) []Field {
 
 	return ctxFieldsAll
 }
-
 
 func newCtxFields(ctx context.Context) *ctxFields {
 	return &ctxFields{

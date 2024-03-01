@@ -1,4 +1,4 @@
-package logger
+package wdlogger
 
 import (
 	"context"
@@ -18,7 +18,7 @@ func TestWithFields(t *testing.T) {
 	}{
 		{
 			args: args{
-				ctx:    context.Background(),
+				ctx: context.Background(),
 				fields: []Field{
 					NewStringField("string-1", "value-1"),
 					NewInt64Field("int64-1", int64(1)),

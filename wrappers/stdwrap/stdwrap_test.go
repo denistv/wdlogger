@@ -10,7 +10,7 @@ func Test_newMsg(t *testing.T) {
 	type args struct {
 		level  logLevel
 		msg    string
-		fields []logger.Field
+		fields []wdlogger.Field
 	}
 	tests := []struct {
 		name string
@@ -31,8 +31,8 @@ func Test_newMsg(t *testing.T) {
 			args: args{
 				level: debugLevel,
 				msg:   "debug message",
-				fields: []logger.Field{
-					logger.NewInt64Field("int64_field", int64(12345)),
+				fields: []wdlogger.Field{
+					wdlogger.NewInt64Field("int64_field", int64(12345)),
 				},
 			},
 			want: "[Debug] debug message {int64_field 12345}",
@@ -42,9 +42,9 @@ func Test_newMsg(t *testing.T) {
 			args: args{
 				level: debugLevel,
 				msg:   "debug message",
-				fields: []logger.Field{
-					logger.NewInt64Field("int64_field", int64(12345)),
-					logger.NewStringField("string_field", "string_value"),
+				fields: []wdlogger.Field{
+					wdlogger.NewInt64Field("int64_field", int64(12345)),
+					wdlogger.NewStringField("string_field", "string_value"),
 				},
 			},
 			want: "[Debug] debug message {int64_field 12345}, {string_field string_value}",

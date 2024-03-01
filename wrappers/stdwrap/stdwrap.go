@@ -30,31 +30,31 @@ type STDWrapper struct {
 	logger *log.Logger
 }
 
-func (s *STDWrapper) Debug(msg string, fields ...logger.Field) {
+func (s *STDWrapper) Debug(msg string, fields ...wdlogger.Field) {
 	s.logger.Printf(newMsg(debugLevel, msg, fields...))
 }
 
-func (s *STDWrapper) Info(msg string, fields ...logger.Field) {
+func (s *STDWrapper) Info(msg string, fields ...wdlogger.Field) {
 	s.logger.Printf(newMsg(infoLevel, msg, fields...))
 }
 
-func (s *STDWrapper) Warn(msg string, fields ...logger.Field) {
+func (s *STDWrapper) Warn(msg string, fields ...wdlogger.Field) {
 	s.logger.Printf(newMsg(warnLevel, msg, fields...))
 }
 
-func (s *STDWrapper) Error(msg string, fields ...logger.Field) {
+func (s *STDWrapper) Error(msg string, fields ...wdlogger.Field) {
 	s.logger.Printf(newMsg(errorLevel, msg, fields...))
 }
 
-func (s *STDWrapper) Panic(msg string, fields ...logger.Field) {
+func (s *STDWrapper) Panic(msg string, fields ...wdlogger.Field) {
 	s.logger.Panic(newMsg(panicLevel, msg, fields...))
 }
 
-func (s *STDWrapper) Fatal(msg string, fields ...logger.Field) {
+func (s *STDWrapper) Fatal(msg string, fields ...wdlogger.Field) {
 	s.logger.Fatal(newMsg(fatalLevel, msg, fields...))
 }
 
-func newMsg(level logLevel, msg string, fields ...logger.Field) string {
+func newMsg(level logLevel, msg string, fields ...wdlogger.Field) string {
 	sb := strings.Builder{}
 
 	sb.WriteString(fmt.Sprintf("[%s] %s", level, msg))
