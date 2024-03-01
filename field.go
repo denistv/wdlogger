@@ -8,6 +8,13 @@ type Field struct {
 	Value any
 }
 
+func NewFloat64Field(key string, value float64) Field {
+	return Field{
+		Key:   key,
+		Value: value,
+	}
+}
+
 func NewInt64Field(key string, value int64) Field {
 	return Field{
 		Key:   key,
