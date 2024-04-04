@@ -37,15 +37,14 @@ func newGELFFields() ([]zap.Field, error) {
 func NewGELF(ws zapcore.WriteSyncer, level zapcore.Level) (*ZapWrapper, error) {
 	cfg := NewGELFEncoderConfig()
 	jsonEncoder := zapcore.NewJSONEncoder(cfg)
-	zapCore := zapcore.NewCore(jsonEncoder, ws, level)
 
 	fields, err := newGELFFields()
 	if err != nil {
 		return nil, fmt.Errorf("creating gelf fields: %w", err)
 	}
 
-	zapCore.With(fields)
-	zapLogger := zap.New(zapCore)
+	zapCore := zapcore.NewCore(jsonEncoder, ws, level).With(fields)
+	zapLogger := zap.New(zapCore).WithOptions(zap.AddStacktrace(zapcore.ErrorLevel))
 	zapWrapper := New(zapLogger)
 
 	return zapWrapper, nil
@@ -118,11 +117,23 @@ func (z *ZapWrapper) Sync() error {
 	return z.zap.Sync()
 }
 
-// NewZapField реализована не самым удачным образом. Когда-нибудь вернусь к этому вопросу (или не вернусь). Сейчас это не принципиальный вопрос.
+// TODO another types
 func newZapField(f wdlogger.Field) zap.Field {
-	return zap.Field{
-		Key:       f.Key,
+	zapField := zap.Field{
+		Key:       gelf.AdditionalField(f.Key),
 		Interface: f.Value,
+	}
+
+	switch f.Value.(type) {
+	case error:
+		zapField.Type = zapcore.ErrorType
+		return zapField
+	case string:
+		zapField.Type = zapcore.StringType
+		return zapField
+	default:
+		zapField.Type = zapcore.ReflectType
+		return zapField
 	}
 }
 
