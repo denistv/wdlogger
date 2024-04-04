@@ -2,53 +2,12 @@ package zapwrap
 
 import (
 	"context"
-	"fmt"
-	"os"
 
 	"github.com/denistv/wdlogger"
 	"github.com/denistv/wdlogger/gelf"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
-
-func NewGELFEncoderConfig() zapcore.EncoderConfig {
-	encoderConfig := zap.NewProductionEncoderConfig()
-	encoderConfig.MessageKey = gelf.ShortMessageField
-	encoderConfig.TimeKey = gelf.TimestampField
-	encoderConfig.CallerKey = gelf.AdditionalField("caller")
-	encoderConfig.FunctionKey = gelf.AdditionalField("function")
-	encoderConfig.StacktraceKey = gelf.AdditionalField("stacktrace")
-
-	return encoderConfig
-}
-
-func newGELFFields() ([]zap.Field, error) {
-	hostname, err := os.Hostname()
-	if err != nil {
-		return nil, fmt.Errorf("getting hostname: %w", err)
-	}
-
-	return []zap.Field{
-		zap.String("version", "1.1"),
-		zap.String("host", hostname),
-	}, nil
-}
-
-func NewGELF(ws zapcore.WriteSyncer, level zapcore.Level) (*ZapWrapper, error) {
-	cfg := NewGELFEncoderConfig()
-	jsonEncoder := zapcore.NewJSONEncoder(cfg)
-
-	fields, err := newGELFFields()
-	if err != nil {
-		return nil, fmt.Errorf("creating gelf fields: %w", err)
-	}
-
-	zapCore := zapcore.NewCore(jsonEncoder, ws, level).With(fields)
-	zapLogger := zap.New(zapCore).WithOptions(zap.AddStacktrace(zapcore.ErrorLevel))
-	zapWrapper := New(zapLogger)
-
-	return zapWrapper, nil
-}
 
 func New(zl *zap.Logger) *ZapWrapper {
 	return &ZapWrapper{
