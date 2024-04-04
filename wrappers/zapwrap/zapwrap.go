@@ -130,6 +130,7 @@ func newZapField(f wdlogger.Field) zap.Field {
 		return zapField
 	case string:
 		zapField.Type = zapcore.StringType
+		zapField.String = f.Value.(string)
 		return zapField
 	default:
 		zapField.Type = zapcore.ReflectType
